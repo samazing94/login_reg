@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Database\Eloquent\Model; 
 class User extends Authenticatable
 {
     use Notifiable;
@@ -14,6 +14,8 @@ class User extends Authenticatable
      *
      * @var array
      */
+    protected $table = 'users';
+    public $primaryKey = 'id';
     protected $fillable = [
         'name', 'username', 'dob', 'email', 'password',
     ];

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -25,4 +27,8 @@ class HomeController extends Controller
     {
         return view('home');
     }
+    // public function get_datatable()
+    // {
+    //     return Datatables::collection(User::all())->make(true);
+    // }
 }
