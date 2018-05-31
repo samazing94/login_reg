@@ -33,12 +33,10 @@
 											{{ $user->updated_at }}
 										</td>
 										<td>
-											<button class="edit-modal btn btn-info"
-											data-info="{{ $user->id }},{{ $user->name }}, {{ $user->password }}, {{$user->email}}">
+											<button class="edit-modal btn btn-info" id="edit_btn">
 											<span class="glyphicon glyphicon-edit"></span> Edit
 											</button>
-											<button class="delete-modal btn btn-danger"
-												data-info="{{ $user->id }},{{ $user->name }}, {{ $user->password }}, {{$user->email}}">
+											<button class="delete-modal btn btn-danger" id="delete_btn">
 											<span class="glyphicon glyphicon-trash"></span> Delete
 											</button>
 										</td>
@@ -48,7 +46,7 @@
 						</table>
 					</div>
 					<!-- x -->
-					<div id="myModal" class="modal fade" role="dialog">
+				 	<div id="myModal" class="modal fade" role="dialog">
 						<div class="modal-dialog">
 							<!-- Modal content-->
 							<div class="modal-content">
@@ -125,7 +123,7 @@
 		],
 		"aaSorting": [],
 		
-		
+		//https://yajrabox.com/docs/laravel-datatables/master/editor-tutorial
 		//"bProcessing": true,
 		//"bServerSide": true,
 		//"sAjaxSource": "http://127.0.0.1/table.php"   ,
@@ -147,8 +145,11 @@
 				style: 'multi'
 			}
 		});
-	    
-	});
 
+	});
+	 $("#edit-btn").click(fucntion() {
+	    	$("#myModal").toggleClass("hidden"){
+
+	    });
 </script>
 
