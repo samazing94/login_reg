@@ -10,9 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+
 
 Route::get('/', function () {
-	$users = User::all ();
+	$users = User::all();
     return view('welcome')->withData( $users );
 });
 
@@ -20,18 +24,15 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'UserController@index');
 Route::get('/dt', 'UserController@dt');
-//Route::get('/dt_t', 'UserController@dt_t');
-Route::post('/editItem', function (Request $request) {
+Route::get('/editItem', function (Request $request) {
 	
 	$rules = array (
-			'name' => 'required|alpha',
-			//'email' => 'required|email',		
+			'name' => 'required|alpha',		
 	);
-	$validator = Validator::make ( Input::all (), $rules );
+	$validator = Validator::make(Input::all(), $rules );
 	if ($validator->fails ())
 		return Response::json ( array (
-				
-				'errors' => $validator->getMessageBag ()->toArray () 
+			'errors' => $validator->getMessageBag()->toArray () 
 		) );
 	else {
 		$user = User::find ( $request->id );
@@ -40,7 +41,7 @@ Route::post('/editItem', function (Request $request) {
 		return response ()->json ( $user );
 	}
 });
-Route::post ('/deleteItem', function (Request $request) {
+Route::get ('/deleteItem', function (Request $request) {
 	User::find ( $request->id )->delete ();
 	return response ()->json ();
 });

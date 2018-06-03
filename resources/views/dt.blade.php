@@ -3,7 +3,6 @@
 <head>
 <title>Laravel</title>
 <meta charset="utf-8">
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="//code.jquery.com/jquery-1.12.3.js"></script>
@@ -62,7 +61,6 @@
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
-						{!! csrf_field() !!}
 							<div class="form-group">
 								<input type="hidden" name="_token" value="{{ Session::token() }}">
 								<label class="control-label col-sm-2" for="id">ID</label>
@@ -141,19 +139,13 @@ function fillmodaluser(details){
 }
 
 	$('.modal-footer').on('click', '.edit', function() {
-		
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
 
 		$.ajax({
 			type: 'post',
 			url: '../public/editItem',
 			user: {
 				'_token': $('input[name=_token]').val(),
-				'id': $("#fid").val(),
+				'id': $('#fid').val(),
 				'name': $('#name').val()
 			},
 			success: function(user) {
@@ -178,12 +170,6 @@ function fillmodaluser(details){
 	});
 	$('.modal-footer').on('click', '.delete', function() {
 	
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-	
 		$.ajax({
 			type: 'post',
 			url: '../public/deleteItem',
@@ -203,4 +189,3 @@ function fillmodaluser(details){
 
 </body>
 </html>
-
