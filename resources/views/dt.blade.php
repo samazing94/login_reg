@@ -3,6 +3,7 @@
 <head>
 <title>Laravel</title>
 <meta charset="utf-8">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="//code.jquery.com/jquery-1.12.3.js"></script>
@@ -20,7 +21,7 @@
 </style>
 <body>
 	<div class="container ">
-		{{ csrf_field() }}
+	
 		<div class="table-responsive text-center">
 			<table class="table table-borderless" id="table">
 				<thead>
@@ -34,16 +35,16 @@
 				</thead>
 				@foreach($users as $user)
 				<tr class="user{{$user->id}}">
-					<td>{{$user->id}}</td>
+					<td >{{$user->id}}</td>
 					<td>{{$user->name}}</td>
 					<td>{{$user->created_at}}</td>
 					<td>{{$user->updated_at}}</td>
 					<td><button class="edit-modal btn btn-info"
-							user-info="{{$user->id}},{{$user->name}}">
+							value="{{$user->id}},{{$user->name}}">
 							<span class="glyphicon glyphicon-edit"></span> Edit
 						</button>
 						<button class="delete-modal btn btn-danger"
-							user-info="{{$user->id}},{{$user->name}}">
+							value="{{$user->id}},{{$user->name}}">
 							<span class="glyphicon glyphicon-trash"></span> Delete
 						</button></td>
 				</tr>
@@ -56,35 +57,37 @@
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" user-dismiss="modal">&times;</button>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title"></h4>
-
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="id">ID</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="fid" disabled>
+						{!! csrf_field() !!}
+							<div class="form-group">
+								<input type="hidden" name="_token" value="{{ Session::token() }}">
+								<label class="control-label col-sm-2" for="id">ID</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="fid" disabled>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="name">Name</label>
-							<div class="col-sm-10">
-								<input type="name" class="form-control" id="name">
+							<div class="form-group">
+								<label class="control-label col-sm-2" for="name">Name</label>
+								<div class="col-sm-10">
+									<input type="name" class="form-control" id="name">
+								</div>
 							</div>
-						</div>
+					</form>
 					<div class="deleteContent">
 						Are you Sure you want to delete <span class="dname"></span> ? <span
-							class="hidden did"></span>
+						class="hidden did"></span>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn actionBtn" user-dismiss="modal">
-							<span id="footer_action_button" class='glyphicon'> </span>
-						</button>
-						<button type="button" class="btn btn-warning" user-dismiss="modal">
-							<span class='glyphicon glyphicon-remove'></span> Close
-						</button>
+							<button type="button" class="btn actionBtn" data-dismiss="modal">
+								<span id="footer_action_button" class='glyphicon'> </span>
+							</button>
+							<button type="button" class="btn btn-warning" data-dismiss="modal">
+								<span class='glyphicon glyphicon-remove'></span> Close
+							</button>
 					</div>
 				</div>
 			</div>
@@ -92,95 +95,110 @@
 	</div>
 	<script>
   $(document).ready(function() {
-    $('#table').DataTable();
+	$('#table').DataTable();
 } );
   </script>
 
 	<script>
 	
-    $(document).on('click', '.edit-modal', function() {
-        $('#footer_action_button').text("Update");
-        $('#footer_action_button').addClass('glyphicon-check');
-        $('#footer_action_button').removeClass('glyphicon-trash');
-        $('.actionBtn').addClass('btn-success');
-        $('.actionBtn').removeClass('btn-danger');
-        $('.actionBtn').removeClass('delete');
-        $('.actionBtn').addClass('edit');
-        $('.modal-title').text('Edit');
-        $('.deleteContent').hide();
-        $('.form-horizontal').show();
-        var stuff = $(this).data('#id');
-       	//$(this).data('stuff').push(3);
-        //var stuff = $(this).data('info').split(',');
-        console.log($(this).data('info'));
-        fillmodaluser(stuff)
-        $('#myModal').modal('show');
-    });
-    $(document).on('click', '.delete-modal', function() {
-        $('#footer_action_button').text(" Delete");
-        $('#footer_action_button').removeClass('glyphicon-check');
-        $('#footer_action_button').addClass('glyphicon-trash');
-        $('.actionBtn').removeClass('btn-success');
-        $('.actionBtn').addClass('btn-danger');
-        $('.actionBtn').removeClass('edit');
-        $('.actionBtn').addClass('delete');
-        $('.modal-title').text('Delete');
-        $('.deleteContent').show();
-        $('.form-horizontal').hide();
-        var stuff = $(this).data('info').split(',');
-        $('.did').text(stuff[0]);
-        $('.dname').html(stuff[1]);
-        $('#myModal').modal('show');
-    });
+	$(document).on('click', '.edit-modal', function() {
+		$('#footer_action_button').text("Update");
+		$('#footer_action_button').addClass('glyphicon-check');
+		$('#footer_action_button').removeClass('glyphicon-trash');
+		$('.actionBtn').addClass('btn-success');
+		$('.actionBtn').removeClass('btn-danger');
+		$('.actionBtn').removeClass('delete');
+		$('.actionBtn').addClass('edit');
+		$('.modal-title').text('Edit');
+		$('.deleteContent').hide();
+		$('.form-horizontal').show();
+		var stuff = $(this).val().split(',');
+		console.log($(this).val());
+		fillmodaluser(stuff)
+		$('#myModal').modal('show');
+	});
+	$(document).on('click', '.delete-modal', function() {
+		$('#footer_action_button').text(" Delete");
+		$('#footer_action_button').removeClass('glyphicon-check');
+		$('#footer_action_button').addClass('glyphicon-trash');
+		$('.actionBtn').removeClass('btn-success');
+		$('.actionBtn').addClass('btn-danger');
+		$('.actionBtn').removeClass('edit');
+		$('.actionBtn').addClass('delete');
+		$('.modal-title').text('Delete');
+		$('.deleteContent').show();
+		$('.form-horizontal').hide();
+		var stuff = $(this).val().split(',');
+		console.log($(this).val('info'));
+		$('.did').text(stuff[0]);
+		$('.dname').html(stuff[1]);
+		$('#myModal').modal('show');
+	});
 
 function fillmodaluser(details){
-    $('#fid').val(details[0]);
-    $('#name').val(details[1]);
+	$('#fid').val(details[0]);
+	$('#name').val(details[1]);
 }
 
-    $('.modal-footer').on('click', '.edit', function() {
-        $.ajax({
-            type: 'post',
-            url: '/editItem',
-            user: {
-                '_token': $('input[name=_token]').val(),
-                'id': $("#fid").val(),
-                'name': $('#name').val()
-            },
-            success: function(user) {
-            	if (user.errors){
-                	$('#myModal').modal('show');
-                    if(user.errors.name) {
-                    	$('.name_error').removeClass('hidden');
-                        $('.name_error').text("Name can't be empty !");
-                    }
-                    if(user.errors.email) {
-                    	$('.email_error').removeClass('hidden');
-                        $('.email_error').text("Email must be a valid one !");
-                    }
-                }
-            	 else {
-            		 
-                     $('.error').addClass('hidden');
-                $('.user' + user.id).replaceWith("<tr class='user" + user.id + "'><td>" +user.id + "</td><td>" + user.name+"</td><td>" + "</td><td>" +
-                          "</td><td><button class='edit-modal btn btn-info' user-info='" + user.id+","+user.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + user.id+","+user.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+	$('.modal-footer').on('click', '.edit', function() {
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 
-            	 }}
-        });
-    });
-    $('.modal-footer').on('click', '.delete', function() {
-        $.ajax({
-            type: 'post',
-            url: '/deleteItem',
-            user: {
-                '_token': $('input[name=_token]').val(),
-                'id': $('.did').text()
-            },
-            success: function(user) {
-                $('.user' + $('.did').text()).remove();
-            }
-        });
-    });
+		$.ajax({
+			type: 'post',
+			url: '../public/editItem',
+			user: {
+				'_token': $('input[name=_token]').val(),
+				'id': $("#fid").val(),
+				'name': $('#name').val()
+			},
+			success: function(user) {
+				if (user.errors){
+					$('#myModal').modal('show');
+					if(user.errors.name) {
+						$('.name_error').removeClass('hidden');
+						$('.name_error').text("Name can't be empty !");
+					}
+					if(user.errors.email) {
+						$('.email_error').removeClass('hidden');
+						$('.email_error').text("Email must be a valid one !");
+					}
+				}
+				 else {
+					 
+					 $('.error').addClass('hidden');
+				$('.user' + users.id).replaceWith("<tr class='users" + users.id + "'><td>" +users.id + "</td><td>" + users.name+"</td><td>" + "</td><td>" + "</td><td><button class='edit-modal btn btn-info' user-info='" + users.id+","+users.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + users.id+","+users.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+
+				 }}
+		});
+	});
+	$('.modal-footer').on('click', '.delete', function() {
+	
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+	
+		$.ajax({
+			type: 'post',
+			url: '../public/deleteItem',
+			  headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			user: {
+				'_token': $('input[name=_token]').val(),
+				'id': $('.did').text()
+			},
+			success: function(user) {
+				$('.user' + $('.did').text()).remove();
+			}
+		});
+	});
 </script>
 
 </body>

@@ -12,23 +12,20 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	$users = User::all ();
+    return view('welcome')->withData( $users );
 });
 
 Auth::routes();
-//Route::get('/home/get_datatable', 'HomeController@get_datatable');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'UserController@index');
 Route::get('/dt', 'UserController@dt');
-//Route::get('/dt/dt_display', 'UserController@get_datatable');
-// Route::get('/dt', function () {
-//     return view('dt');
-// });
-Route::post ( '/editItem', function (Request $request) {
+//Route::get('/dt_t', 'UserController@dt_t');
+Route::post('/editItem', function (Request $request) {
 	
 	$rules = array (
 			'name' => 'required|alpha',
-			'email' => 'required|email',		
+			//'email' => 'required|email',		
 	);
 	$validator = Validator::make ( Input::all (), $rules );
 	if ($validator->fails ())
@@ -37,15 +34,13 @@ Route::post ( '/editItem', function (Request $request) {
 				'errors' => $validator->getMessageBag ()->toArray () 
 		) );
 	else {
-		
 		$user = User::find ( $request->id );
 		$user->name = ($request->name);
-		$user->email = ($request->email);
 		$user->save ();
 		return response ()->json ( $user );
 	}
-} );
-Route::post ( '/deleteItem', function (Request $request) {
+});
+Route::post ('/deleteItem', function (Request $request) {
 	User::find ( $request->id )->delete ();
 	return response ()->json ();
-} );
+});
