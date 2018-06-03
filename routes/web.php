@@ -25,7 +25,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'UserController@index');
 Route::get('/dt', 'UserController@dt');
 Route::get('/editItem', function (Request $request) {
-	
 	$rules = array (
 			'name' => 'required|alpha',		
 	);
@@ -35,7 +34,7 @@ Route::get('/editItem', function (Request $request) {
 			'errors' => $validator->getMessageBag()->toArray () 
 		) );
 	else {
-		$user = User::find ( $request->id );
+		$user->id = User::find ( $request->id );
 		$user->name = ($request->name);
 		$user->save ();
 		return response ()->json ( $user );
