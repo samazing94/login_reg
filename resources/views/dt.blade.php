@@ -1,155 +1,188 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+<title>Laravel</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-@section('content')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
-<div class="container">
-	<div class="row justify-content-center">
-		<div class="col-md-8">
-			<div class="card">
-				<div class="card-header">Dashboard</div>
+<script src="//code.jquery.com/jquery-1.12.3.js"></script>
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<style>
+</style>
+<body>
+	<div class="container ">
+		{{ csrf_field() }}
+		<div class="table-responsive text-center">
+			<table class="table table-borderless" id="table">
+				<thead>
+					<tr>
+						<th class="text-center">ID</th>
+						<th class="text-center">Name</th>
+						<th class="text-center">Created At</th>
+						<th class="text-center">Updated At</th>
+						<th class="text-center">Actions</th>
+					</tr>
+				</thead>
+				@foreach($users as $user)
+				<tr class="user{{$user->id}}">
+					<td>{{$user->id}}</td>
+					<td>{{$user->name}}</td>
+					<td>{{$user->created_at}}</td>
+					<td>{{$user->updated_at}}</td>
+					<td><button class="edit-modal btn btn-info"
+							user-info="{{$user->id}},{{$user->name}}">
+							<span class="glyphicon glyphicon-edit"></span> Edit
+						</button>
+						<button class="delete-modal btn btn-danger"
+							user-info="{{$user->id}},{{$user->name}}">
+							<span class="glyphicon glyphicon-trash"></span> Delete
+						</button></td>
+				</tr>
+				@endforeach
+			</table>
+		</div>
+	</div>
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" user-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
 
-				<div class="card-body">
-					<div class="row">
-						<table class="table table-bordered" id="pageTable">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Created At</th>
-									<th>Updated At</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-
-								<tbody>
-									@foreach ($users as $user)
-									<tr>
-										<td>
-											{{ $user->name }}
-										</td>
-										<td>
-											{{ $user->created_at }}
-										</td>
-										<td>
-											{{ $user->updated_at }}
-										</td>
-										<td>
-											<button class="edit-modal btn btn-info" id="edit_btn">
-											<span class="glyphicon glyphicon-edit"></span> Edit
-											</button>
-											<button class="delete-modal btn btn-danger" id="delete_btn">
-											<span class="glyphicon glyphicon-trash"></span> Delete
-											</button>
-										</td>
-									</tr>
-									@endforeach
-								</tbody>
-						</table>
-					</div>
-					<!-- x -->
-				 	<div id="myModal" class="modal fade" role="dialog">
-						<div class="modal-dialog">
-							<!-- Modal content-->
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal">&times;</button>
-									<h4 class="modal-title"></h4>
-
-								</div>
-								<div class="modal-body">
-									<form class="form-horizontal" role="form">
-										<div class="form-group">
-											<label class="control-label col-sm-2" for="id">ID</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control" id="id" disabled>
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="control-label col-sm-2" for="name">Name</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control" id="name">
-											</div>
-										</div>
-										<p class="lname_error error text-center alert alert-danger hidden"></p>
-										<div class="form-group">
-											<label class="control-label col-sm-2" for="email">Email</label>
-											<div class="col-sm-10">
-												<input type="email" class="form-control" id="email">
-											</div>
-										</div>
-									</form>
-									<div class="deleteContent">
-										Are you Sure you want to delete <span class="dname"></span> ? <span
-											class="hidden did"></span>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn actionBtn" data-dismiss="modal">
-											<span id="footer_action_button" class='glyphicon'> </span>
-										</button>
-										<button type="button" class="btn btn-warning" data-dismiss="modal">
-											<span class='glyphicon glyphicon-remove'></span> Close
-										</button>
-									</div>
-								</div>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="id">ID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="fid" disabled>
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="name">Name</label>
+							<div class="col-sm-10">
+								<input type="name" class="form-control" id="name">
+							</div>
+						</div>
+					<div class="deleteContent">
+						Are you Sure you want to delete <span class="dname"></span> ? <span
+							class="hidden did"></span>
 					</div>
-					<!-- x -->
+					<div class="modal-footer">
+						<button type="button" class="btn actionBtn" user-dismiss="modal">
+							<span id="footer_action_button" class='glyphicon'> </span>
+						</button>
+						<button type="button" class="btn btn-warning" user-dismiss="modal">
+							<span class='glyphicon glyphicon-remove'></span> Close
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-@stop
-@section('scripts')
-<script src="//code.jquery.com/jquery-1.12.3.js"></script>
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src ="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
-<script src ="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"></script>
-<script>
-	jQuery(function($) {
-	//initiate dataTables plugin
-	var myTable = 
-	$('#pageTable')
-	//.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
-	.DataTable( {
-		bAutoWidth: false,
-		"aoColumns": [
-			null,
-			null,
-			null,
-			null
-		],
-		"aaSorting": [],
-		
-		//https://yajrabox.com/docs/laravel-datatables/master/editor-tutorial
-		//"bProcessing": true,
-		//"bServerSide": true,
-		//"sAjaxSource": "http://127.0.0.1/table.php"   ,
+	<script>
+  $(document).ready(function() {
+    $('#table').DataTable();
+} );
+  </script>
 
-		//,
-		//"sScrollY": "200px",
-		//"bPaginate": false,
+	<script>
+	
+    $(document).on('click', '.edit-modal', function() {
+        $('#footer_action_button').text("Update");
+        $('#footer_action_button').addClass('glyphicon-check');
+        $('#footer_action_button').removeClass('glyphicon-trash');
+        $('.actionBtn').addClass('btn-success');
+        $('.actionBtn').removeClass('btn-danger');
+        $('.actionBtn').removeClass('delete');
+        $('.actionBtn').addClass('edit');
+        $('.modal-title').text('Edit');
+        $('.deleteContent').hide();
+        $('.form-horizontal').show();
+        var stuff = $(this).data('#id');
+       	//$(this).data('stuff').push(3);
+        //var stuff = $(this).data('info').split(',');
+        console.log($(this).data('info'));
+        fillmodaluser(stuff)
+        $('#myModal').modal('show');
+    });
+    $(document).on('click', '.delete-modal', function() {
+        $('#footer_action_button').text(" Delete");
+        $('#footer_action_button').removeClass('glyphicon-check');
+        $('#footer_action_button').addClass('glyphicon-trash');
+        $('.actionBtn').removeClass('btn-success');
+        $('.actionBtn').addClass('btn-danger');
+        $('.actionBtn').removeClass('edit');
+        $('.actionBtn').addClass('delete');
+        $('.modal-title').text('Delete');
+        $('.deleteContent').show();
+        $('.form-horizontal').hide();
+        var stuff = $(this).data('info').split(',');
+        $('.did').text(stuff[0]);
+        $('.dname').html(stuff[1]);
+        $('#myModal').modal('show');
+    });
 
-		//"sScrollX": "100%",
-		//"sScrollXInner": "120%",
-		//"bScrollCollapse": true,
-		//Note: if you are applying horizontal scrolling (sScrollX) on a ".table-bordered"
-		//you may want to wrap the table inside a "div.dataTables_borderWrap" element
+function fillmodaluser(details){
+    $('#fid').val(details[0]);
+    $('#name').val(details[1]);
+}
 
-		//"iDisplayLength": 50
+    $('.modal-footer').on('click', '.edit', function() {
+        $.ajax({
+            type: 'post',
+            url: '/editItem',
+            user: {
+                '_token': $('input[name=_token]').val(),
+                'id': $("#fid").val(),
+                'name': $('#name').val()
+            },
+            success: function(user) {
+            	if (user.errors){
+                	$('#myModal').modal('show');
+                    if(user.errors.name) {
+                    	$('.name_error').removeClass('hidden');
+                        $('.name_error').text("Name can't be empty !");
+                    }
+                    if(user.errors.email) {
+                    	$('.email_error').removeClass('hidden');
+                        $('.email_error').text("Email must be a valid one !");
+                    }
+                }
+            	 else {
+            		 
+                     $('.error').addClass('hidden');
+                $('.user' + user.id).replaceWith("<tr class='user" + user.id + "'><td>" +user.id + "</td><td>" + user.name+"</td><td>" + "</td><td>" +
+                          "</td><td><button class='edit-modal btn btn-info' user-info='" + user.id+","+user.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + user.id+","+user.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
 
-
-			select: {
-				style: 'multi'
-			}
-		});
-
-	});
-	 $("#edit-btn").click(fucntion() {
-	    	$("#myModal").toggleClass("hidden"){
-
-	    });
+            	 }}
+        });
+    });
+    $('.modal-footer').on('click', '.delete', function() {
+        $.ajax({
+            type: 'post',
+            url: '/deleteItem',
+            user: {
+                '_token': $('input[name=_token]').val(),
+                'id': $('.did').text()
+            },
+            success: function(user) {
+                $('.user' + $('.did').text()).remove();
+            }
+        });
+    });
 </script>
+
+</body>
+</html>
 
