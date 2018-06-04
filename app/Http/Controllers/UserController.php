@@ -3,47 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Yajra\DataTables\Facades;
+use Response;
 use App\User;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
 
 	public function index(){
 
-		$users = \App\User::all();
+		$user = \App\User::all();
 		return view('home', compact('users'));
 	}
-	public function dt_t()
-	{
-		return DataTables::of(User::query())->make(true);
+	// public function dt_t()
+	// {
+	// 	return DataTables::of(User::query())->make(true);
+	// }
+	// public function dt(){
+
+	// 	$users = \App\User::all();
+	// 	return view('dt', compact('users'));
+	// }
+
+	public function manage() {
+		$title = 'User Management';
+		$users = User::all();
+
+		return view('manage.list', compact('title', 'users'));
 	}
-	public function dt(){
 
-		$users = \App\User::all();
-		return view('dt', compact('users'));
+	public function manageUpdate(Request $request) {
+		$datetime = Carbon::now();
+		User::where('id', $request->id)->update(['name' => $request->name, 'updated_at' => $datetime]);
+
+		return response()->json(['id' => $request->id, 'name' => $request->name, 'updated_at' => $datetime->format('Y-m-d H:i:s')]);
 	}
 
-	public function editUser(Request $request) {
-		$rules = array (
-			'name' => 'required|alpha',
-		);
+	public function manageDelete(Request $request) {
+		User::where('id', $request->id)->delete();
 
-		$validator = Validator::make(Input::all(), $rules );
-
-		if ($validator->fails ()) {
-			return Response::json ( array (
-				'errors' => $validator->getMessageBag()->toArray () 
-			));
-		}
-		else {
-			$user->id = User::find ( $request->id );
-			$user->name = ($request->name);
-			$user->save ();
-			return response ()->json ( $user );
-		}
+		return response()->json(['id' => $request->id]);
 	}
-	
 }

@@ -155,21 +155,21 @@
 				'name': $('#name').val()
 			},
 			success: function(user) {
-				// if (user.errors){
-				// 	$('#myModal').modal('show');
-				// 	if(user.errors.name) {
-				// 		$('.name_error').removeClass('hidden');
-				// 		$('.name_error').text("Name can't be empty !");
-				// 	}
-				// 	if(user.errors.email) {
-				// 		$('.email_error').removeClass('hidden');
-				// 		$('.email_error').text("Email must be a valid one !");
-				// 	}
-				// }
-				//  else {
-				// 	$('.error').addClass('hidden');
-				// 	$('.user' + users.id).replaceWith("<tr class='users" + users.id + "'><td>" +users.id + "</td><td>" + users.name+"</td><td>" + "</td><td>" + "</td><td><button class='edit-modal btn btn-info' user-info='" + users.id+","+users.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + users.id+","+users.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
-				// }
+				if (user.errors){
+					$('#myModal').modal('show');
+					if(user.errors.name) {
+						$('.name_error').removeClass('hidden');
+						$('.name_error').text("Name can't be empty !");
+					}
+					if(user.errors.email) {
+						$('.email_error').removeClass('hidden');
+						$('.email_error').text("Email must be a valid one !");
+					}
+				}
+				 else {
+					$('.error').addClass('hidden');
+					$('.user' + user.id).replaceWith("<tr class='user" + user.id + "'><td>" +user.id + "</td><td>" + user.name+"</td><td>" + "</td><td>" + "</td><td><button class='edit-modal btn btn-info' user-info='" + user.id+","+user.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + user.id+","+user.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+				 }
 			}
 		});
 	});
@@ -178,11 +178,11 @@
 	
 		$.ajax({
 			type: 'post',
-			url: '../public/deleteUser',
+			url: "{{ url('/dt/deleteUser') }}",
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			user: {
+			data: {
 				'_token': $('input[name=_token]').val(),
 				'id': $('.did').text()
 			},

@@ -1,0 +1,9 @@
+
+
+User userController@index
+
+User/view/{$id} userController@show
+
+User/update/{$id} userController@update
+
+User/delete/{$id} userController@delete
