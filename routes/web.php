@@ -16,31 +16,17 @@ use Illuminate\Support\Facades\Input;
 
 
 Route::get('/', function () {
-	$users = User::all();
-    return view('welcome')->withData( $users );
+    return view('welcome');
 });
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'UserController@index');
 Route::get('/dt', 'UserController@dt');
-Route::get('/editItem', function (Request $request) {
-	$rules = array (
-			'name' => 'required|alpha',		
-	);
-	$validator = Validator::make(Input::all(), $rules );
-	if ($validator->fails ())
-		return Response::json ( array (
-			'errors' => $validator->getMessageBag()->toArray () 
-		) );
-	else {
-		$user->id = User::find ( $request->id );
-		$user->name = ($request->name);
-		$user->save ();
-		return response ()->json ( $user );
-	}
-});
-Route::get ('/deleteItem', function (Request $request) {
+Route::post('/dt/editUser', 'UserController@editUser');
+Route::post ('/deleteUser', function (Request $request) {
 	User::find ( $request->id )->delete ();
 	return response ()->json ();
 });
+
+//wait

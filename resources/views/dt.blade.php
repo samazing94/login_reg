@@ -4,6 +4,7 @@
 <title>Laravel</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="_token" content="{{csrf_token()}}" />
 
 <script src="//code.jquery.com/jquery-1.12.3.js"></script>
 <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -62,7 +63,6 @@
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
 							<div class="form-group">
-								<input type="hidden" name="_token" value="{{ Session::token() }}">
 								<label class="control-label col-sm-2" for="id">ID</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control" id="fid" disabled>
@@ -91,11 +91,12 @@
 			</div>
 		</div>
 	</div>
+
 	<script>
-  $(document).ready(function() {
-	$('#table').DataTable();
-} );
-  </script>
+		$(document).ready(function() {
+			$('#table').DataTable();
+		});
+	</script>
 
 	<script>
 	
@@ -111,10 +112,10 @@
 		$('.deleteContent').hide();
 		$('.form-horizontal').show();
 		var stuff = $(this).val().split(',');
-		console.log($(this).val());
 		fillmodaluser(stuff)
 		$('#myModal').modal('show');
 	});
+
 	$(document).on('click', '.delete-modal', function() {
 		$('#footer_action_button').text(" Delete");
 		$('#footer_action_button').removeClass('glyphicon-check');
@@ -133,47 +134,52 @@
 		$('#myModal').modal('show');
 	});
 
-function fillmodaluser(details){
-	$('#fid').val(details[0]);
-	$('#name').val(details[1]);
-}
+	function fillmodaluser(details){
+		$('#fid').val(details[0]);
+		$('#name').val(details[1]);
+	}
 
 	$('.modal-footer').on('click', '.edit', function() {
 
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+			}
+		});
+
 		$.ajax({
 			type: 'post',
-			url: '../public/editItem',
-			user: {
-				'_token': $('input[name=_token]').val(),
+			url: "{{ url('/dt/editUser') }}",
+			data: {
 				'id': $('#fid').val(),
 				'name': $('#name').val()
 			},
 			success: function(user) {
-				if (user.errors){
-					$('#myModal').modal('show');
-					if(user.errors.name) {
-						$('.name_error').removeClass('hidden');
-						$('.name_error').text("Name can't be empty !");
-					}
-					if(user.errors.email) {
-						$('.email_error').removeClass('hidden');
-						$('.email_error').text("Email must be a valid one !");
-					}
-				}
-				 else {
-					 
-					 $('.error').addClass('hidden');
-				$('.user' + users.id).replaceWith("<tr class='users" + users.id + "'><td>" +users.id + "</td><td>" + users.name+"</td><td>" + "</td><td>" + "</td><td><button class='edit-modal btn btn-info' user-info='" + users.id+","+users.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + users.id+","+users.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
-
-				 }}
+				// if (user.errors){
+				// 	$('#myModal').modal('show');
+				// 	if(user.errors.name) {
+				// 		$('.name_error').removeClass('hidden');
+				// 		$('.name_error').text("Name can't be empty !");
+				// 	}
+				// 	if(user.errors.email) {
+				// 		$('.email_error').removeClass('hidden');
+				// 		$('.email_error').text("Email must be a valid one !");
+				// 	}
+				// }
+				//  else {
+				// 	$('.error').addClass('hidden');
+				// 	$('.user' + users.id).replaceWith("<tr class='users" + users.id + "'><td>" +users.id + "</td><td>" + users.name+"</td><td>" + "</td><td>" + "</td><td><button class='edit-modal btn btn-info' user-info='" + users.id+","+users.name+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' user-info='" + users.id+","+users.name+"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+				// }
+			}
 		});
 	});
+
 	$('.modal-footer').on('click', '.delete', function() {
 	
 		$.ajax({
 			type: 'post',
-			url: '../public/deleteItem',
-			  headers: {
+			url: '../public/deleteUser',
+			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			user: {
