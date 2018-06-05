@@ -22,17 +22,6 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home', 'UserController@index');
-Route::get('/dt', 'UserController@dt');
-Route::post('/dt/editUser', 'UserController@editUser');
-Route::post('/dt/deleteUser', 'UserController@deleteUser');
-// Route::post ('/deleteUser', function (Request $request) {
-// 	User::find ( $request->id )->delete ();
-// 	return response ()->json ();
-// });
-
-//wait
-
-
 Route::get('/manage', 'UserController@manage');
 Route::post('/manage/update', 'UserController@manageUpdate');
 Route::post('/manage/delete', 'UserController@manageDelete');

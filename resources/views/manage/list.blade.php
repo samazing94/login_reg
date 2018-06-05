@@ -95,7 +95,13 @@
 
 @section('script')
 
-	var table = $('#table').DataTable();
+	$('#table').DataTable({
+		dom: 'Bfrtip',
+		buttons: [
+		'copy', 'csv', 'excel', 'pdf', 'print'
+		]
+	});
+
 	
 	$(document).on('click', '.edit-modal', function() {
 		$('#footer_action_button').text("Update");
@@ -147,8 +153,8 @@
 				'name': $('#name').val()
 			},
 			success: function(response) {
-				$('.user' + response.id).find('.name').text(response.name);
-				$('.user' + response.id).find('.updated_at').text(response.updated_at);
+				$('.user' + response.id).find('.name').html(response.name);
+				$('.user' + response.id).find('.updated_at').text(response.updated_at);	
 			}
 		});
 	});
@@ -162,7 +168,7 @@
 				'id': $('.did').text()
 			},
 			success: function(response) {
-				table
+				$('#table').DataTable()
 					.row( $('.user' + response.id) )
 					.remove()
 					.draw();

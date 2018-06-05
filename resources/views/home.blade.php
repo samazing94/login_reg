@@ -40,7 +40,7 @@
 								</tr>
 							</tbody>
 						</table>
-						<a href="{{ url('dt') }}">Check list of other users</a>
+						<a href="{{ url('/manage') }}">Check list of other users</a>
 					</div>
 				</section>
 			</div>

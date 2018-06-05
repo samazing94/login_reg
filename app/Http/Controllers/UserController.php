@@ -16,15 +16,6 @@ class UserController extends Controller
 		$user = \App\User::all();
 		return view('home', compact('users'));
 	}
-	// public function dt_t()
-	// {
-	// 	return DataTables::of(User::query())->make(true);
-	// }
-	// public function dt(){
-
-	// 	$users = \App\User::all();
-	// 	return view('dt', compact('users'));
-	// }
 
 	public function manage() {
 		$title = 'User Management';
